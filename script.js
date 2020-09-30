@@ -1,11 +1,9 @@
-let userInput = '';
+let displayValue = '';
 let equation = '';
 let operator = '';
 let num1;
 let num2;
 let result;
-
-const display = document.getElementById('display');
 
 // KEYBOARD SUPPORT
 window.addEventListener('keydown', function(e) {
@@ -17,8 +15,8 @@ window.addEventListener('keydown', function(e) {
 const numberButtons = document.querySelectorAll('.number');
 for (let i = 0 ; i < numberButtons.length; i++) {
     numberButtons[i].addEventListener('click', () => {
-        userInput += numberButtons[i].value;
-        display.textContent = `${equation}${userInput}`;
+        displayValue += numberButtons[i].value;
+        display.textContent = `${equation}${displayValue}`;
     });
 };
 
@@ -26,61 +24,46 @@ for (let i = 0 ; i < numberButtons.length; i++) {
 const addButton = document.querySelector('.add');
 addButton.addEventListener('click', () => {
     checkInput();
-    operator = 'add';
-    num1 = userInput;
-    equation = `${num1}+`;
-    display.textContent = equation;
-    userInput = '';
+    operator = '+';
+    updateDisplay();
 });
 
 // SUBTRACT
 const subtractButton = document.querySelector('.subtract');
 subtractButton.addEventListener('click', () => {
     checkInput();
-    operator = 'subtract';
-    num1 = userInput;
-    equation = `${num1}-`;
-    display.textContent = equation;
-    userInput = '';
+    operator = '-';
+    updateDisplay();
 });
 
 // MULTIPLY
 const multiplyButton = document.querySelector('.multiply');
 multiplyButton.addEventListener('click', () => {
     checkInput();
-    operator = 'multiply';
-    num1 = userInput;
-    equation = `${num1}*`;
-    display.textContent = equation;
-    userInput = '';
+    operator = '*';
+    updateDisplay();
 });
 
 // DIVIDE
 const divideButton = document.querySelector('.divide');
 divideButton.addEventListener('click', () => {
     checkInput();
-    operator = 'divide';
-    num1 = userInput;
-    equation = `${num1}/`;
-    display.textContent = equation;
-    userInput = '';
+    operator = '/';
+    updateDisplay();
 });
 
 // MODULUS
 const modulusButton = document.querySelector('.modulus');
 modulusButton.addEventListener('click', () => {
     checkInput();
-    operator = 'modulus';
-    num1 = userInput;
-    equation = `${num1}%`;
-    display.textContent = equation;
-    userInput = '';
+    operator = '%';
+    updateDisplay();
 });
 
 // RESULT
 const resultButton = document.querySelector('.result');
 resultButton.addEventListener('click', () => {
-    num2 = userInput;
+    num2 = displayValue;
     operate(operator, num1, num2);
     display.textContent = result;
 });
@@ -89,28 +72,28 @@ resultButton.addEventListener('click', () => {
 const clearButton = document.querySelector('.clear');
 clearButton.addEventListener('click', () => {
     equation = '';
-    userInput = '';
+    displayValue = '';
     num1 = undefined;
     num2 = undefined;
     operator = undefined;
     result = undefined;
-    display.textContent = userInput;
+    display.textContent = '';
 });
 
 // DECIMAL
 /*
 const decimalButton = document.querySelector('.decimal');
 decimalButton.addEventListener('click', () => {
-    userInput += decimalButton.innerText;
-    display.textContent = `${equation} ${userInput}`;
+    displayValue += decimalButton.innerText;
+    display.textContent = `${equation} ${displayValue}`;
 });
 */
 
 // BACKSPACE
 const backspaceButton = document.querySelector('.backspace');
 backspaceButton.addEventListener('click', () => {
-    userInput = userInput.slice(0, -1);
-    display.textContent = userInput;
+    displayValue = displayValue.slice(0, -1);
+    display.textContent = displayValue;
 });
 
 // REVERSE
@@ -118,75 +101,84 @@ backspaceButton.addEventListener('click', () => {
 const reverseButton = document.querySelector('.reverse');
 reverseButton.addEventListener('click', () => {
     checkInput();
-    userInput = userInput * -1;
-    num1 = userInput;
-    display.textContent = userInput;
+    displayValue = displayValue * -1;
+    num1 = displayValue;
+    display.textContent = displayValue;
 });
 */
 
 // MATH FUNCTIONS
 function add(num1, num2) {
     result = Math.round((num1 + num2) * 1000) / 1000;
-}
+};
 
 function subtract(num1, num2) {
     result = Math.round((num1 - num2) * 1000) / 1000;
-}
+};
 
 function multiply(num1, num2) {
     result = Math.round((num1 * num2) * 1000) / 1000;
-}
+};
 
 function divide(num1, num2) {
     if (num2 === 0) {
         result = 'ERROR!';
     } else {
         result = Math.round((num1 / num2) * 1000) / 1000;
-    }
-}
+    };
+};
 
 function modulus(num1, num2) {
     result = num1 % num2;
-}
+};
 
 // INPUT USER VALUES INTO MATH FUNCTIONS
 function operate(operator, num1, num2) {
     num1 = parseInt(num1);
     num2 = parseInt(num2);
-    if (operator === 'add') {
+    if (operator === '+') {
         add(num1, num2);
         return result;
-    } else if (operator === 'subtract') {
+    } else if (operator === '-') {
         subtract(num1, num2);
         return result;
-    } else if (operator === 'multiply') {
+    } else if (operator === '*') {
         multiply(num1, num2);
         return result;
-    } else if (operator === 'divide') {
+    } else if (operator === '/') {
         divide(num1, num2);
         return result;
-    } else if (operator === 'modulus') {
+    } else if (operator === '%') {
         modulus(num1, num2);
         return result;
-    }
-}
+    };
+};
 
 // CHECK PREVIOUS INPUT
 function checkInput() {
     if (num1 === undefined) {
-        num1 = userInput;
+        num1 = displayValue;
     } else if (result === 'ERROR!') {
         equation = '';
-        userInput = '';
+        displayValue = '';
         num1 = undefined;
         num2 = undefined;
         operator = undefined;
         result = 0;
     } else {
-        num2 = userInput;
+        num2 = displayValue;
         operate(operator, num1, num2);
         num1 = result;
         display.textContent = result;
-        userInput = result;
-    }
-}
+        displayValue = result;
+    };
+};
+
+// UPDATE DISPLAY AND VALUES
+function updateDisplay() {
+    const display = document.getElementById('display');
+    num1 = displayValue;
+    equation = `${num1}${operator}`;
+    display.textContent = equation;
+    displayValue = '';
+};
